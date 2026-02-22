@@ -5,7 +5,8 @@
 プレイヤー（ロボット）を操作し、史跡内の各地点へ移動しながら地形や遺構の理解を深めることを目的としています。
 
 WEBGL ビルドに対応しており、ブラウザ上での操作が可能です。
-[八王子城バーチャル案内サイト](https://matsumura-shoichi.github.io/Hachioji-jo/)
+
+[〇サイト：八王子城バーチャル案内](https://matsumura-shoichi.github.io/Hachioji-jo/)
 ---
 
 ## 🎮 主な機能
