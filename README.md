@@ -47,6 +47,156 @@ Cinemachine
 スクリプトから振幅（Amplitude Gain）および周波数（Frequency Gain）を一時的に変更することで、
 着地時のみカメラシェイクを発生させています。
 
+## 🔧 スクリプト設定ガイド（Inspector 設定例付き）
+
+本プロジェクトでは、各機能を以下のスクリプトによって管理しています。
+Unity Editor 上での Inspector 設定と併せて解説します。
+
+---
+
+### 🎬 OpeningZoom.cs
+
+ゲーム開始時に、上空からプレイヤーへズームインするオープニング演出を行います。
+
+#### ▼ アタッチ先
+
+```
+OpeningManager（Empty GameObject）
+```
+
+#### ▼ Inspector 設定例
+
+| 項目             | 設定内容                                         |
+| -------------- | -------------------------------------------- |
+| Opening Cam    | OpeningCam（CinemachineVirtualCamera）         |
+| Player Cam     | PlayerFollowCamera（CinemachineVirtualCamera） |
+| Start Distance | 100                                          |
+| End Distance   | 5                                            |
+| Duration       | 5                                            |
+
+※ OpeningCam の Priority を PlayerCam より高く設定してください。
+
+---
+
+### 📍 TeleporterManager.cs
+
+地点選択時のテレポート処理を管理します。
+落下モーション、SE再生、着地時のカメラ揺れもここで制御します。
+
+#### ▼ アタッチ先
+
+```
+GameManager（Empty GameObject）
+```
+
+#### ▼ Inspector 設定例
+
+| 項目           | 設定内容                           |
+| ------------ | ------------------------------ |
+| Player       | PlayerArmature                 |
+| Locations    | 各テレポート地点Transform              |
+| Info Manager | InfoPanel（LocationInfoManager） |
+| Fall SE      | 落下音AudioClip                   |
+| Land SE      | 着地音AudioClip                   |
+| Camera Shake | PlayerFollowCamera             |
+
+---
+
+### 🌍 LocationInfoManager.cs
+
+地点移動時に、説明画像や音声ガイドを表示・再生します。
+※ 同一地点へ2回目以降の移動時には表示されません。
+
+#### ▼ アタッチ先
+
+```
+InfoPanel（UI Panel）
+```
+
+#### ▼ Inspector 設定例
+
+| 項目           | 設定内容                       |
+| ------------ | -------------------------- |
+| Info Image   | DescriptionImage（UI Image） |
+| Audio Source | InfoPanel                  |
+| Panel        | InfoPanel                  |
+
+---
+
+### 📡 CinemachineShake.cs
+
+Cinemachine の
+Basic Multi Channel Perlin（Noise）を利用し、着地時のカメラ揺れを実装します。
+
+#### ▼ アタッチ先
+
+```
+PlayerFollowCamera（CinemachineVirtualCamera）
+```
+
+#### ▼ 必須設定
+
+CinemachineVirtualCamera の
+
+```
+Noise → Basic Multi Channel Perlin
+```
+
+を選択してください。
+
+---
+
+### 🖱️ WebGLCameraControl.cs
+
+WEBGL ビルド時のマウスロック制御およびズーム操作を管理します。
+
+#### ▼ アタッチ先
+
+```
+MainCamera
+```
+
+| 操作      | 内容               |
+| ------- | ---------------- |
+| 右クリック   | カメラ操作開始（カーソルロック） |
+| ESC     | カーソル解除           |
+| マウスホイール | ズーム              |
+
+---
+
+### 🚪 QuitGame.cs
+
+ゲーム終了用UIパネルを制御します。
+
+#### ▼ アタッチ先
+
+```
+GameManager
+```
+
+---
+
+### 🧭 SceneLoader.cs
+
+タイトル画面からゲームシーンへの遷移を行います。
+
+---
+
+### 📌 TerrainPoint.cs
+
+テレポート地点の座標管理用スクリプトです。
+
+---
+
+### 📖 ReadmeIntroPlayer.cs
+
+ゲーム開始時のイントロ表示制御を行います。
+
+---
+
+### 🗂️ LocationData.cs
+
+各地点の説明画像・音声データを格納するクラスです。
 ---
 
 ## ⌨️ 操作方法
