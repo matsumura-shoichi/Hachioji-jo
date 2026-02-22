@@ -63,6 +63,7 @@ Unity Editor 上での Inspector 設定と併せて解説します。
 ```
 OpeningManager（Empty GameObject）
 ```
+<img src="Doc/Images/CameraZoom(CameraManager).jpg" width="600">
 
 #### ▼ Inspector 設定例
 
