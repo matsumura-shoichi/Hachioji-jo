@@ -1,326 +1,212 @@
-# 🏯 八王子城バーチャル案内 (WebGL)
-# Hachioji Castle 3D Exploration 
+🏯 八王子城バーチャル案内 (WebGL)
+Hachioji Castle 3D Exploration
 
-本プロジェクトは、八王子城跡を3D空間上で自由に探索できるアプリケーションです。
+本プロジェクトは、八王子城跡を 3D 空間上で自由に探索できるアプリケーションです。
 プレイヤー（ロボット）を操作し、史跡内の各地点へ移動しながら地形や遺構の理解を深めることを目的としています。
 
-WEBGL ビルドに対応しており、ブラウザ上での操作が可能です。
+WEBGL ビルドに対応しており、ブラウザ上で操作可能です。
 
-[〇サイト：八王子城バーチャル案内](https://matsumura-shoichi.github.io/Hachioji-jo/)
----
-地形データの作成方法（八王子城跡の再現）
+🔗 公開サイト
+https://matsumura-shoichi.github.io/Hachioji-jo/
 
-本プロジェクトでは、八王子城跡の地形を実際のDEM（数値標高モデル）データから再現しています。
+📑 目次
 
-使用データ：
+プロジェクト概要
+
+地形データの作成方法
+
+主な機能
+
+使用スクリプト一覧
+
+カメラ揺れの実装
+
+スクリプト設定ガイド
+
+操作方法
+
+使用データ・出典
+
+開発環境
+
+🎮 プロジェクト概要
+
+実測 DEM データを用いた実寸スケール地形再現
+
+三人称視点によるフィールド探索
+
+地点ごとの歴史解説表示
+
+Cinemachine を活用した演出
+
+WEBGL 対応（ブラウザ操作）
+
+🌍 地形データの作成方法（八王子城跡の再現）
+
+本プロジェクトでは、実際の DEM（数値標高モデル）を用いて地形を再現しています。
+
+■ 使用データ
 
 0.25m DEM（東京都デジタルツイン実現プロジェクト 多摩地域点群データ）
-![G空間情報センターからのDL画面](Doc/Images/G空間データセンターDL画面.jpg)
-![DLした赤色立体図](Doc/Images/DLした赤色立体図.jpg)
+
 
 八王子城赤色立体縄張り図
 
-① QGISによる位置合わせ
 
-縄張り図をQGISに読み込む
-![QGISを使った位置合わせ](Doc/Images/QGISを使った位置合わせ.jpg)
-ジオレファレンス機能を使用してDEMと位置合わせ
+① QGIS による位置合わせ
 
-城跡部分のみを切り抜く
-![標高データ切り抜き](Doc/Images/標高データ切り抜き.jpg)
-切り抜いた範囲のDEMをGeoTIFF形式で保存
+縄張り図を QGIS に読み込む
 
-② GeoTIFFの正規化
+ジオレファレンス機能で DEM と位置合わせ
 
-取得したDEMは標高差をもとに正規化します。
+城跡範囲を切り抜く
 
-（縄張り図範囲）：
-標高最小値：222.44m
-標高最大値：479.22m
+GeoTIFF 形式で保存
+
+
+
+
+② GeoTIFF の正規化
+
+縄張り図範囲：
+
+最小標高：222.44m
+
+最大標高：479.22m
+
 標高差：256.78m
 
-以下の処理を行います：
+処理内容：
 
-(標高 - 最小標高) ÷ 標高差 で0〜1に正規化
+(標高 − 最小標高) ÷ 標高差 で 0〜1 に正規化
 
-16bit整数（0〜65535）へ変換
+16bit 整数（0〜65535）へ変換
 
 解像度を 4097 × 4097 pixel に統一
-![正規化した地形データ](Doc/Images/正規化した地形データ.jpg)
 
-③ RAW形式への変換
+③ RAW 形式への変換
 
-GeoTIFFを画像編集ソフトで南北反転
+GeoTIFF を南北反転
 
-16bit RAW形式で保存
+16bit RAW 形式で保存
 
-※Unityは南北が逆になるため、反転が必要
+※ Unity は南北が逆になるため反転が必要
 
-④ Unityへのインポート
-
-UnityのTerrain設定：
+④ Unity へのインポート
+Terrain 設定
 
 Heightmap Resolution：4097
 
-Terrain Size：
+Terrain Size
 
 横：約1278m
 
 縦：約902m
 
-高さ：標高差256.78m
-![Unityterrainsettings](Doc/Images/Unityterrainsettings.jpg)
+高さ：256.78m
 
-Terrain → Import Raw を使用して読み込みます。
+Terrain → Import Raw で読み込みます。
 
 ⑤ 結果
 
-実際のDEMに基づいた、実寸スケールの八王子城跡地形をUnity上に再現しています。
+実測 DEM に基づいた、実寸スケールの八王子城跡地形を Unity 上に再現しています。
 
-## 🎮 主な機能
+🎮 主な機能
 
-* 三人称視点によるフィールド探索
-* 地点選択による瞬間移動（テレポート）
-* テレポート時の演出
+三人称視点による探索
 
-  * 上空からの落下モーション
-  * 落下SE
-  * 着地SE
-  * Cinemachine Noise を利用した着地時カメラシェイク
-* 各地点ごとの解説表示（※初回移動時のみ）
-* WEBGL環境における360度カメラ操作対応
-* マウスカーソルのロック／解除制御
+地点選択テレポート
 
----
+落下演出（SE + カメラ揺れ）
 
-## 🧩 使用スクリプト一覧
+初回のみ地点解説表示
 
-| Script名                | 役割                            |
-| ---------------------- | ----------------------------- |
-| TeleportManager.cs     | 地点移動処理（落下演出付きテレポート）           |
-| CinemachineShake.cs    | Cinemachine Noise を用いたカメラ揺れ処理 |
-| LocationInfoManager.cs | 地点説明UIおよび音声再生                 |
-| WebGLCameraControl.cs  | WEBGL用カメラ操作・ズーム処理             |
-| QuitGame.cs            | 終了処理                          |
+WEBGL 360度カメラ対応
 
----
+マウスロック制御
 
-## 🎥 カメラ揺れの実装について
+🧩 使用スクリプト一覧
+Script名	役割
+TeleportManager.cs	落下演出付きテレポート
+CinemachineShake.cs	着地カメラ揺れ
+LocationInfoManager.cs	地点説明UI
+WebGLCameraControl.cs	WEBGLカメラ制御
+QuitGame.cs	終了処理
+🎥 カメラ揺れの実装について
 
 着地時のカメラ揺れは
-Unity Technologies
-が提供する
-Cinemachine
-の **Basic Multi Channel Perlin（Noise）** を利用して実装しています。
-
-スクリプトから振幅（Amplitude Gain）および周波数（Frequency Gain）を一時的に変更することで、
-着地時のみカメラシェイクを発生させています。
-
-## 🔧 スクリプト設定ガイド（Inspector 設定例付き）
-
-本プロジェクトでは、各機能を以下のスクリプトによって管理しています。
-Unity Editor 上での Inspector 設定と併せて解説します。
-
----
-
-### 🎬 OpeningZoom.cs
-
-ゲーム開始時に、上空からプレイヤーへズームインするオープニング演出を行います。
-
-#### ▼ アタッチ先
-
-```
-OpeningManager（Empty GameObject）
-```
-![OpeningZoom Inspector](Doc/Images/OpeningZoom.jpg)
-
-#### ▼ Inspector 設定例
-
-| 項目             | 設定内容                                         |
-| -------------- | -------------------------------------------- |
-| Opening Cam    | OpeningCam（CinemachineVirtualCamera）         |
-| Player Cam     | PlayerFollowCamera（CinemachineVirtualCamera） |
-| Start Distance | 100                                          |
-| End Distance   | 5                                            |
-| Duration       | 5                                            |
-
-※ OpeningCam の Priority を PlayerCam より高く設定してください。
-
----
-
-### 📍 TeleporterManager.cs
-
-地点選択時のテレポート処理を管理します。
-落下モーション、SE再生、着地時のカメラ揺れもここで制御します。
-
-#### ▼ アタッチ先
-
-```
-GameManager（Empty GameObject）
-```
-![GameManager Inspector](Doc/Images/TeleportManager+QuitGame(GameManager).jpg)
-
-#### ▼ Inspector 設定例
-
-| 項目           | 設定内容                           |
-| ------------ | ------------------------------ |
-| Player       | PlayerArmature                 |
-| Locations    | 各テレポート地点Transform              |
-| Info Manager | InfoPanel（LocationInfoManager） |
-| Fall SE      | 落下音AudioClip                   |
-| Land SE      | 着地音AudioClip                   |
-| Camera Shake | PlayerFollowCamera             |
-
----
-
-### 🌍 LocationInfoManager.cs
-
-地点移動時に、説明画像や音声ガイドを表示・再生します。
-※ 同一地点へ2回目以降の移動時には表示されません。
-
-#### ▼ アタッチ先
-
-```
-InfoPanel（UI Panel）
-```
-![InfoPanel Inspector](Doc/Images/LocationInfoManager.jpg)
-
-#### ▼ Inspector 設定例
-
-| 項目           | 設定内容                       |
-| ------------ | -------------------------- |
-| Info Image   | DescriptionImage（UI Image） |
-| Audio Source | InfoPanel                  |
-| Panel        | InfoPanel                  |
-
----
-
-### 📡 CinemachineShake.cs
-
+Unity Technologies が提供する
 Cinemachine の
-Basic Multi Channel Perlin（Noise）を利用し、着地時のカメラ揺れを実装します。
 
-#### ▼ アタッチ先
+Basic Multi Channel Perlin（Noise） を利用しています。
 
-```
-PlayerFollowCamera（CinemachineVirtualCamera）
-```
-![PlayerFollowCamera Inspector](Doc/Images/CinemachineShake(PlayerFollowCamera).jpg)
+Amplitude Gain / Frequency Gain を一時的に変更することで、
+着地時のみ揺れを発生させています。
 
-#### ▼ 必須設定
+🔧 スクリプト設定ガイド（Inspector 設定例付き）
 
-CinemachineVirtualCamera の
+各スクリプトのアタッチ先と Inspector 設定例を以下に示します。
 
-```
-Noise → Basic Multi Channel Perlin
-```
+🎬 OpeningZoom.cs
 
-を選択してください。
+上空からプレイヤーへズームするオープニング演出。
 
----
+📍 TeleportManager.cs
 
-### 🖱️ WebGLCameraControl.cs
+テレポート処理・SE・カメラ距離リセット。
 
-WEBGL ビルド時のマウスロック制御およびズーム操作を管理します。
+🌍 LocationInfoManager.cs
 
-#### ▼ アタッチ先
+地点説明表示（初回のみ）。
 
-```
-MainCamera
-```
-![MainCamera Inspector](Doc/Images/WebGLCameraControl(MainCamera).jpg)
+📡 CinemachineShake.cs
 
-| 操作      | 内容               |
-| ------- | ---------------- |
-| 右クリック   | カメラ操作開始（カーソルロック） |
-| ESC     | カーソル解除           |
-| マウスホイール | ズーム              |
+Noise を使用したカメラ揺れ。
 
----
+🖱️ WebGLCameraControl.cs
 
-### 🚪 QuitGame.cs
+WEBGL マウス制御。
 
-ゲーム終了用UIパネルを制御します。
+📖 ReadmeIntroPlayer.cs
 
-#### ▼ アタッチ先
+イントロ表示制御。
 
-```
-GameManager
-```
+⌨️ 操作方法
+操作	内容
+矢印キー	移動
+Shift + 矢印	走行
+右クリック	視点操作
+マウスホイール	ズーム
+ESC	カーソル解除
+📚 使用データ・出典
+■ 地形データ
 
----
-
-
-### 📌 TerrainPoint.cs
-
-テレポート地点の座標管理用スクリプトです。
-
----
-
-### 📖 ReadmeIntroPlayer.cs
-
-ゲーム開始時のイントロ表示制御を行います。
-
----
-![ReadmeController Inspector](Doc/Images/ReadmeIntroManager.jpg)
-
-### 🗂️ LocationData.cs
-
-各地点の説明画像・音声データを格納するクラスです。
----
-
-## ⌨️ 操作方法
-
-| 操作           | 内容            |
-| ------------ | ------------- |
-| 矢印キー         | 移動            |
-| Shift + 矢印キー | 走行            |
-| マウス右クリック     | 視点操作（カーソルロック） |
-| マウスホイール      | ズーム           |
-| ESCキー        | カーソル解除        |
-
----
-
-## 📚 使用データ・出典
-
-### ■ 地形データ
-
-東京都デジタルサービス局 デジタルサービス推進部
-デジタルサービス推進課 作成
-**東京都デジタルツイン実現プロジェクト 多摩地域点群データ**
-
-グリッドデータ（0.25m）を使用
+東京都デジタルサービス局
+東京都デジタルツイン実現プロジェクト
 https://www.geospatial.jp/ckan/dataset/tokyopc-tama-202
 
----
+■ 地図データ
 
-### ■ 地図データ
-
-八王子城公式ガイドHP編集部（風魔 Project）作成
-**赤色立体縄張り図**
+八王子城公式ガイドHP編集部（風魔 Project）
+赤色立体縄張り図
 https://tensho18.jp/k_geospm.html
 
----
+■ 解説資料
 
-### ■ 解説資料
-
-八王子市教育委員会 生涯学習スポーツ部 文化財課 作成
-**八王子城跡散策マップ**
+八王子市教育委員会 文化財課
+八王子城跡散策マップ
 https://www.city.hachioji.tokyo.jp/kurashi/kyoiku/005/bunkazaikanrenshisetsu/p005201.html
 
----
-
-## ⚠️ ライセンス・注意事項
+⚠️ ライセンス・注意事項
 
 本プロジェクトは教育・研究目的で作成されています。
-使用している各種データの著作権は、それぞれの作成機関に帰属します。
+各種データの著作権はそれぞれの作成機関に帰属します。
+二次利用の際は必ず出典元の利用規約をご確認ください。
 
-二次利用の際は、必ず各出典元の利用規約をご確認ください。
+🛠️ 開発環境
 
----
+Unity（Starter Assets Third Person Controller）
 
-## 🛠️ 開発環境
+Cinemachine
 
-* Unity（Third Person Starter Assets 使用）
-* Cinemachine
-* Windows / WEBGL
+Windows / WEBGL
