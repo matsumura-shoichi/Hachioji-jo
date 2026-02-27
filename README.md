@@ -43,9 +43,9 @@ https://matsumura-shoichi.github.io/Hachioji-jo/
 
 - 0.25m DEM（東京都デジタルツイン実現プロジェクト 多摩地域点群データ）  
 ![G空間情報センターからのDL画面](Doc/Images/G空間データセンターDL画面.jpg)
+![DLした赤色立体図](Doc/Images/DLした赤色立体図.jpg)
 
 - 八王子城赤色立体縄張り図  
-![DLした赤色立体図](Doc/Images/DLした赤色立体図.jpg)
 
 ---
 
