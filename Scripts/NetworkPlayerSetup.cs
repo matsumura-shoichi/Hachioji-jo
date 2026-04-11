@@ -9,11 +9,9 @@ public class NetworkPlayerSetup : MonoBehaviourPun
         if (!photonView.IsMine)
         {
             // 入力を止める
-            var controller = GetComponent<ThirdPersonController>();
-            if (controller != null)
-                controller.enabled = false;
+            GetComponent<ThirdPersonController>().enabled = false;
 
-            // 入力システム停止
+            // 入力システムも止める
             var input = GetComponent<StarterAssetsInputs>();
             if (input != null)
                 input.enabled = false;
